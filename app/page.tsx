@@ -61,8 +61,8 @@ export default function HomePage() {
       <h1 className="text-5xl font-extrabold leading-tight text-blue-600 mb-6">
         Quality Copilot
       </h1>
-      <p className="text-base text-slate-500 leading-relaxed max-w-xl mb-8 break-keep">
-        가상 제조 공정 LOT 데이터를 기반으로 불량률, 장비별 이상, 공정 조건별 위험도를 시각화하고,{' '}
+      <p className="text-base text-slate-500 leading-relaxed mb-8">
+        가상 제조 공정 LOT 데이터를 기반으로 불량률, 장비별 이상, 공정 조건별 위험도를 시각화하고,<br />
         룰 기반 또는 AI 리포트로 원인 후보와 권장 조치를 자동 정리합니다.
       </p>
 
