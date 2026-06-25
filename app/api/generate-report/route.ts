@@ -3,6 +3,23 @@ import { createServerClient } from '@/lib/supabase/server'
 import { generateRuleBasedReport } from '@/lib/data/reportGenerator'
 import { ProcessLot, AnomalyEvent, AiReport } from '@/types/manufacturing'
 
+export async function GET() {
+  const supabase = createServerClient()
+  if (!supabase) {
+    return NextResponse.json([])
+  }
+  const { data, error } = await supabase
+    .from('ai_reports')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(20)
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+  return NextResponse.json(data ?? [])
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()

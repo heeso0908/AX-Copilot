@@ -19,24 +19,53 @@ export default function ReportsPage() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    async function loadData() {
+    async function loadAll() {
       setLoading(true)
       try {
-        const res = await fetch('/api/process-lots')
-        if (!res.ok) throw new Error('데이터 로드 실패')
+        // 공정 데이터 + 저장된 리포트 병렬 로드
+        const [lotsRes, reportsRes] = await Promise.all([
+          fetch('/api/process-lots'),
+          fetch('/api/generate-report'),
+        ])
+
+        if (!lotsRes.ok) throw new Error('데이터 로드 실패')
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const raw: Record<string, any>[] = await res.json()
+        const raw: Record<string, any>[] = await lotsRes.json()
         const loadedLots = transformRawData(raw)
         setLots(loadedLots)
         setAnomalies(detectAnomalies(loadedLots))
         setDataLoaded(true)
+
+        // 저장된 리포트 복원
+        if (reportsRes.ok) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const saved: any[] = await reportsRes.json()
+          if (Array.isArray(saved) && saved.length > 0) {
+            const restored: AiReport[] = saved.map((r) => ({
+              id: r.id,
+              report_type: r.report_type ?? 'rule_based',
+              title: r.title ?? '',
+              summary: r.summary ?? '',
+              situation: r.situation ?? '',
+              key_metrics: r.key_metrics ?? {},
+              root_cause_candidates: r.root_cause_candidates ?? [],
+              verification_items: r.verification_items ?? [],
+              recommended_actions: r.recommended_actions ?? [],
+              prevention_checklist: r.prevention_checklist ?? [],
+              model_used: r.model_used,
+              created_at: r.created_at,
+            }))
+            setReports(restored)
+            setSelectedReport(restored[0])
+          }
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : '알 수 없는 오류')
       } finally {
         setLoading(false)
       }
     }
-    loadData()
+    loadAll()
   }, [])
 
   async function handleGenerateReport() {
