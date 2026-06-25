@@ -35,7 +35,7 @@ export function detectAnomalies(lots: ProcessLot[]): AnomalyEvent[] {
     events.push({
       severity: 'High',
       equipment_id,
-      anomaly_type: 'Flagged Anomaly Detected',
+      anomaly_type: '이상 플래그 LOT 집중 발생',
       start_time: sortedLots[0].timestamp,
       end_time: sortedLots[sortedLots.length - 1].timestamp,
       metric_name: 'anomaly_flag',
@@ -55,7 +55,7 @@ export function detectAnomalies(lots: ProcessLot[]): AnomalyEvent[] {
       const eqpLots = lots.filter((l) => l.equipment_id === eqpRate.equipment_id)
       // Avoid duplicating with rule 1
       const alreadyAdded = events.some(
-        (e) => e.equipment_id === eqpRate.equipment_id && e.anomaly_type === 'Flagged Anomaly Detected'
+        (e) => e.equipment_id === eqpRate.equipment_id && e.anomaly_type === '이상 플래그 LOT 집중 발생'
       )
       if (!alreadyAdded) {
         const sortedLots = eqpLots.sort(
@@ -64,7 +64,7 @@ export function detectAnomalies(lots: ProcessLot[]): AnomalyEvent[] {
         events.push({
           severity: 'High',
           equipment_id: eqpRate.equipment_id,
-          anomaly_type: 'Equipment Defect Rate Elevated',
+          anomaly_type: '장비 불량률 기준 초과',
           start_time: sortedLots[0].timestamp,
           end_time: sortedLots[sortedLots.length - 1].timestamp,
           metric_name: 'defect_rate',
@@ -101,7 +101,7 @@ export function detectAnomalies(lots: ProcessLot[]): AnomalyEvent[] {
     events.push({
       severity: 'Medium',
       equipment_id,
-      anomaly_type: 'Particle Spike',
+      anomaly_type: '파티클 급증',
       start_time: sortedLots[0].timestamp,
       end_time: sortedLots[sortedLots.length - 1].timestamp,
       metric_name: 'particle_count',
@@ -131,7 +131,7 @@ export function detectAnomalies(lots: ProcessLot[]): AnomalyEvent[] {
     events.push({
       severity: 'High',
       equipment_id,
-      anomaly_type: 'Metal Contamination Signal',
+      anomaly_type: '금속 오염 신호 감지',
       start_time: sortedLots[0].timestamp,
       end_time: sortedLots[sortedLots.length - 1].timestamp,
       metric_name: 'ni_contamination_ppb',
@@ -163,7 +163,7 @@ export function detectAnomalies(lots: ProcessLot[]): AnomalyEvent[] {
     events.push({
       severity: 'Medium',
       equipment_id,
-      anomaly_type: 'Bath Temperature Drift',
+      anomaly_type: '배스 온도 이탈',
       start_time: sortedLots[0].timestamp,
       end_time: sortedLots[sortedLots.length - 1].timestamp,
       metric_name: 'bath_temp_c',
@@ -191,7 +191,7 @@ export function detectAnomalies(lots: ProcessLot[]): AnomalyEvent[] {
     events.push({
       severity: 'High',
       equipment_id: 'EQP-03',
-      anomaly_type: 'Carrier Contamination Candidate',
+      anomaly_type: '캐리어 오염 의심',
       start_time: sortedLots[0].timestamp,
       end_time: sortedLots[sortedLots.length - 1].timestamp,
       metric_name: 'defect_rate (EQP-03 + Carrier-B)',
